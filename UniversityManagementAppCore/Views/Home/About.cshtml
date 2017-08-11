@@ -1,0 +1,41 @@
+﻿@model IEnumerable<UniversityManagementAppCore.ViewModels.EnrollmentCountByDate>
+@{
+    ViewData["Title"] = "About";
+}
+
+
+<br/>
+<div class="panel-group">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span style="font-size: 25px">Student Body Statistics</span>
+        </div>
+        <div class="panel-body">
+            <table class="table table-bordered">
+                <tr>
+                    <th>
+                        Enrollment Date
+                    </th>
+                    <th>
+                        Students
+                    </th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EnrollmentDate)
+                        </td>
+                        <td>
+                            @item.StudentCount
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+
+

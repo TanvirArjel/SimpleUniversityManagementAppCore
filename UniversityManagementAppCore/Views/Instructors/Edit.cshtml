@@ -1,0 +1,96 @@
+@model UniversityManagementAppCore.Models.Instructor
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<br />
+<div class="panel-group">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><span style="font-size: 25px">Update Instructor</span></div>
+        <div class="panel-body">
+            <form asp-action="Edit">
+                <div class="form-horizontal">
+                   
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="InstructorId" />
+                    <div class="form-group">
+                        <label asp-for="FirstName" class="col-md-2 control-label"></label>
+                        <div class="col-md-10">
+                            <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="LastName" class="col-md-2 control-label"></label>
+                        <div class="col-md-10">
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="HireDate" class="col-md-2 control-label"></label>
+                        <div class="col-md-10">
+                            <input asp-for="HireDate" class="form-control" />
+                            <span asp-validation-for="HireDate" class="text-danger"></span>
+                        </div>
+                    </div>
+        
+                    <div class="form-group">
+                        <label asp-for="OfficeAssignment.Location" class="col-md-2 control-label"></label>
+                        <div class="col-md-10">
+                            <input asp-for="OfficeAssignment.Location" class="form-control" />
+                            <span asp-validation-for="OfficeAssignment.Location" class="text-danger"></span>
+                        </div>
+                    </div>
+        
+                    <div class="form-group">
+                        <label asp-for="CourseAssignments" class="col-md-2 control-label"></label>
+                        <div class="col-md-10">
+                            <table class="table table-bordered">
+                                <tr>
+                                @{
+                                    int count = 0;
+
+                                    var selectedCoursesHs = new HashSet<int>(Model.CourseAssignments.Select(x => x.CourseId));
+
+                                    foreach (var course in ViewBag.AllCourses)
+                                    {
+                                        if (count++ % 3 == 0 )
+                                        {
+                                            @:</tr><tr>
+                                        }
+
+                                        <text>
+                                            <td>
+                                                <input type="checkbox" name="selectedCourses" value="@course.CourseId"
+                                                       @if (selectedCoursesHs.Contains(course.CourseId)) { <text> Checked</text> }> @course.CourseId @course.Title
+                                            </td> 
+                                   
+                                        </text>
+                                    }
+
+                                    @:</tr>
+                                }
+                    
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Save" class="btn btn-default" />
+                            <a asp-action="Index" class="btn btn-primary">Back to List</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

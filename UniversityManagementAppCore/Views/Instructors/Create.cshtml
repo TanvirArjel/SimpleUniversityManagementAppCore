@@ -1,0 +1,93 @@
+@model UniversityManagementAppCore.Models.Instructor
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<br />
+<div class="panel-group">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><span style="font-size: 25px">Create Instructor</span></div>
+        <div class="panel-body">
+            <form asp-action="Create">
+                <div class="form-horizontal">
+                    
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="FirstName" class="col-md-2 control-label"></label>
+                        <div class="col-md-10">
+                            <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="LastName" class="col-md-2 control-label"></label>
+                        <div class="col-md-10">
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="HireDate" class="col-md-2 control-label"></label>
+                        <div class="col-md-10">
+                            <input asp-for="HireDate" class="form-control" />
+                            <span asp-validation-for="HireDate" class="text-danger"></span>
+                        </div>
+                    </div>
+        
+                    <div class="form-group">
+                        <label asp-for="OfficeAssignment.Location" class="col-md-2 control-label"></label>
+                        <div class="col-md-10">
+                            <input asp-for="OfficeAssignment.Location" class="form-control" />
+                            <span asp-validation-for="OfficeAssignment.Location" class="text-danger" />
+                        </div>
+                    </div>
+        
+                    <div class="form-group">
+                        <label asp-for="CourseAssignments" class="col-md-2 control-label"></label>
+                        <div class="col-md-10">
+                            <table class="table table-bordered">
+                                <tr>
+                                @{
+                                    int count = 0;
+
+                                    foreach (var course in ViewBag.AllCourses)
+                                    {
+                                        if (count++ % 3 == 0 )
+                                        {
+                                            @:</tr><tr>
+                                        }
+
+                                        <text>
+                                            <td>
+                                                <input type="checkbox" name="selectedCourses" value="@course.CourseId"> @course.CourseId @course.Title
+                                            </td> 
+                                   
+                                        </text>
+                                    }
+
+                                    @:</tr>
+                                }
+                    
+                            </table>
+                        </div>
+                    </div>
+        
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Create" class="btn btn-default" />
+                            <a asp-action="Index" class="btn btn-primary">Back to List</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,56 @@
+@model UniversityManagementAppCore.Models.Course
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<br/>
+
+<div class="panel-group">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span style="font-size: 25px">Course Delete</span>
+        </div>
+        <div class="panel-body">
+            <div class="alert alert-danger">Are you sure you want to delete this?</div>
+            <div>
+                <dl class="dl-horizontal">
+                    <input type="hidden" asp-for="CourseId"/>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CourseId)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.CourseId)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Title)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Title)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Credits)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Credits)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Department)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Department.Name)
+                    </dd>
+                </dl>
+
+                <form asp-action="Delete">
+                    <div class="form-actions no-color">
+                        <input type="submit" value="Delete" class="btn btn-default"/> |
+                        <a asp-action="Index" class="btn btn-primary">Back to List</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>>
+

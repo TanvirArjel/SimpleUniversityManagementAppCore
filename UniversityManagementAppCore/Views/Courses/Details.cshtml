@@ -1,0 +1,51 @@
+@model UniversityManagementAppCore.Models.Course
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+<br />
+<div class="panel-group">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span style="font-size: 25px">Course Details</span>
+        </div>
+        <div class="panel-body">
+            <div>
+              
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CourseId)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.CourseId)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Title)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Title)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Credits)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Credits)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Department)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Department.Name)
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <a asp-action="Edit" asp-route-id="@Model.CourseId" class="btn btn-default">Edit</a> |
+            <a asp-action="Index" class="btn btn-primary">Back to List</a>
+        </div>
+    </div>
+
+</div>

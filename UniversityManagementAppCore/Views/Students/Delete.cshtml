@@ -1,0 +1,69 @@
+@model UniversityManagementAppCore.Models.Student
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<br/>
+<div class="panel-group">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span style="font-size: 25px">Delete Student</span>
+        </div>
+        <div class="panel-body">
+            <p class="text-danger">@ViewData["ErrorMessage"]</p>
+            <dl class="dl-horizontal">
+                <input type="hidden" asp-for="StudentId"/>
+                <dt>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.FirstName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.LastName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.EnrollmentDate)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.EnrollmentDate)
+                </dd>
+                
+                <dt>
+                    @Html.DisplayNameFor(model => model.Enrollments)
+                </dt>
+                <dd>
+                    <table class="table">
+                        <tr>
+                            <th>Course Title</th>
+                            <th>Grade</th>
+                        </tr>
+                        @foreach (var item in Model.Enrollments)
+                        {
+                            <tr>
+                                <td>@item.Course.Title</td>
+                                <td>@item.Grade</td>
+                            </tr>
+                        }
+                    </table>
+                </dd>
+            </dl>
+        </div>
+        <div class="panel-footer">
+            <form asp-action="Delete">
+                <div class="form-actions no-color">
+                    <input type="submit" value="Delete" class="btn btn-default" /> |
+                    <a asp-action="Index" class="btn btn-primary">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+</div>
+
+
+

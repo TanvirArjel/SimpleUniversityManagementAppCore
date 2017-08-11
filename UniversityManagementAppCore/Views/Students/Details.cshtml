@@ -1,0 +1,59 @@
+@model UniversityManagementAppCore.Models.Student
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<br/>
+<div class="panel-group">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span style="font-size: 25px">Student Details</span>
+        </div>
+        <div class="panel-body">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.FirstName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.LastName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.EnrollmentDate)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.EnrollmentDate)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Enrollments)
+                </dt>
+                <dd>
+                    <table class="table">
+                        <tr>
+                            <th>Course Title</th>
+                            <th>Grade</th>
+                        </tr>
+                        @foreach (var item in Model.Enrollments)
+                        {
+                            <tr>
+                                <td>@item.Course.Title</td>
+                                <td>@item.Grade</td>
+                            </tr>
+                        }
+                    </table>
+                </dd>
+            </dl>
+        </div>
+        <div class="panel-footer">
+            <a asp-action="Edit" asp-route-id="@Model.StudentId" class="btn btn-default">Edit</a> |
+            <a asp-action="Index" class="btn btn-primary">Back to List</a>
+        </div>
+    </div>
+    
+</div>

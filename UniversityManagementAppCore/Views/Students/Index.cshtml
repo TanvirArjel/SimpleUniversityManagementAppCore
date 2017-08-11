@@ -1,0 +1,237 @@
+@model UniversityManagementAppCore.CommonCode.PaginatedList<UniversityManagementAppCore.Models.Student>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<style>
+    .MakeDisabled {
+        pointer-events: none;
+        cursor: not-allowed;
+        /*opacity: .65;*/
+    }
+
+    .pagination {
+        margin: 0;
+    }
+</style>
+
+<br/>
+<div class="panel-group">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span style="font-size: 25px">Student List</span>
+            <a class="btn btn-success pull-right" asp-action="Create">Create New</a>
+        </div>
+        <div class="panel-body">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <form asp-action="Index" method="get">
+                        <th><input type="text" name="firstName" value="@ViewData["currentFirstNameFilter"]" /></th>
+                        <th><input type="text" name="lastName" value="@ViewData["currentLastNameFilter"]" /></th>
+                        <input type="hidden" name="sortOrder" value="@ViewData["currentSortOrder"]" />
+                        <th><input type="submit" value="Search" /></th>
+                        <th><a class="btn" asp-action="Index">Back to Full List</a></th>
+                    </form>
+                </tr>
+                <tr>
+
+                    <th>
+                        <a asp-controller="Students" asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParam"]" asp-route-firstName="@ViewData["currentFirstNameFilter"]" asp-route-lastName="@ViewData["currentLastNameFilter"]">@Html.DisplayNameFor(model => model[0].FirstName)</a>
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model[0].LastName)
+                    </th>
+                    <th>
+                        <a asp-controller="Students" asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParam"]" asp-route-firstName="@ViewData["currentFirstNameFilter"]" asp-route-lastName="@ViewData["currentLastNameFilter"]">@Html.DisplayNameFor(model => model[0].EnrollmentDate)</a>
+                    </th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FirstName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LastName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EnrollmentDate)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.StudentId">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.StudentId">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.StudentId">Delete</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+
+            @{
+                var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+            }
+            
+            
+            <button class="btn btn-default MakeDisabled pull-left">
+                Showing item @ViewBag.PageItemStarts to @ViewBag.PageItemTo of @ViewBag.TotalItems items
+            </button>
+
+
+            <ul class="pagination pull-right">
+                <li>
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@ViewData["currentSortOrder"]"
+                       asp-route-page="@(Model.PageIndex - 1)"
+                       asp-route-firstName="@ViewData["currentFirstNameFilter"]"
+                       asp-route-lastName="@ViewData["currentLastNameFilter"]"
+                       class="@prevDisabled btn">
+                        Previous
+                    </a>
+                </li>
+                
+                
+                @{
+                    
+                    if (ViewBag.TotalPage > ViewBag.PageButtonToShow)
+                    {
+                        if (ViewBag.CurrentPage > (ViewBag.PageButtonToShow - 2))
+                        {
+                            <li><a asp-action="Index" asp-route-page="1">1</a></li>
+                            <li><a>....</a></li>
+
+                            if (ViewBag.CurrentPage + 2 >= ViewBag.TotalPage)
+                            {
+
+                                for (int i = ViewBag.TotalPage - 3; i < ViewBag.TotalPage; i++)
+                                {
+                                    string currentPageCss = "";
+
+                                    if (i == ViewBag.CurrentPage)
+                                    {
+                                        currentPageCss = "active MakeDisabled";
+                                    }
+                                    <li class="@currentPageCss">
+                                        <a asp-action="Index" asp-route-page="@i">@i</a>
+                                    </li>
+                                }
+                            }
+                            else
+                            {
+                                for (int i = ViewBag.CurrentPage - 1; i <= ViewBag.CurrentPage + 1; i++)
+                                {
+
+                                    string currentPageCss = "";
+
+                                    if (i == ViewBag.CurrentPage)
+                                    {
+                                        currentPageCss = "active MakeDisabled";
+                                    }
+                                    <li class="@currentPageCss">
+                                        <a asp-action="Index" asp-route-page="@i">@i</a>
+                                    </li>
+                                }
+                            }
+                        }
+
+                        else
+                        {
+                            for (int i = 1; i <= ViewBag.PageButtonToShow - 1; i++)
+                            {
+
+                                string currentPageCss = "";
+
+                                if (i == ViewBag.CurrentPage)
+                                {
+                                    currentPageCss = "active MakeDisabled";
+                                }
+                                <li class="@currentPageCss">
+                                    <a asp-action="Index" asp-route-page ="@i">@i</a>
+                                </li>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 1; i <= ViewBag.TotalPage; i++)
+                        {
+                            string currentPageCss = "";
+
+                            if (i == ViewBag.CurrentPage)
+                            {
+                                currentPageCss = "active";
+                            }
+                            <li class="@currentPageCss">
+                                <a asp-action="Index"
+                                   asp-route-sortOrder="@ViewData["currentSortOrder"]"
+                                   asp-route-page="@i"
+                                   asp-route-firstName="@ViewData["currentFirstNameFilter"]"
+                                   asp-route-lastName="@ViewData["currentLastNameFilter"]">
+                                    @i
+                                </a>
+                            </li>
+                        }
+                    }
+                    
+                }
+                
+                
+                
+                @{
+                    string hideDotCss = "";
+                    if (ViewBag.TotalPage <= ViewBag.PageButtonToShow)
+                    {
+                        hideDotCss = "hidden";
+                    }
+                    else 
+                    {
+                        if (ViewBag.CurrentPage + 2 >= ViewBag.TotalPage)
+                        {
+                            hideDotCss = "hidden";
+                        }
+                    }
+                    
+
+
+                    <li class="@hideDotCss"><a>....</a></li>
+
+                    if (ViewBag.TotalPage > ViewBag.PageButtonToShow)
+                    {
+
+                        string currentPageCss = "";
+
+                        if (ViewBag.CurrentPage == ViewBag.TotalPages)
+                        {
+                            currentPageCss = "active MakeDisabled";
+                        }
+                        <li class="@currentPageCss">
+                            <a asp-action="Index" asp-route-page ="@ViewBag.TotalPage">@ViewBag.TotalPage</a>
+                        </li>
+                    }
+                }
+               
+               
+                <li>
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@ViewData["currentSortOrder"]"
+                       asp-route-page="@(Model.PageIndex + 1)"
+                       asp-route-firstName="@ViewData["currentFirstNameFilter"]"
+                       asp-route-lastName="@ViewData["currentLastNameFilter"]"
+                       class="@nextDisabled btn">
+                        Next
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+

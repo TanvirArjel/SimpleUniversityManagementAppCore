@@ -1,0 +1,66 @@
+@model UniversityManagementAppCore.Models.Department
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<br />
+<div class="panel-group">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span style="font-size: 25px">Update Department</span>
+        </div>
+        <div class="panel-body">
+            <form asp-action="Edit">
+                <div class="form-horizontal">
+                   
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="DepartmentId" />
+                    <div class="form-group">
+                        <label asp-for="Name" class="col-md-2 control-label"></label>
+                        <div class="col-md-10">
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Budget" class="col-md-2 control-label"></label>
+                        <div class="col-md-10">
+                            <input asp-for="Budget" class="form-control" />
+                            <span asp-validation-for="Budget" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="StartDate" class="col-md-2 control-label"></label>
+                        <div class="col-md-10">
+                            <input asp-for="StartDate" class="form-control"/>
+                            <span asp-validation-for="StartDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="InstructorId" class="control-label col-md-2">Instrcutor</label>
+                        <div class="col-md-10">
+                            <select asp-for="InstructorId" class="form-control" asp-items="ViewBag.InstructorList">
+                    
+                            </select>
+                            <span asp-validation-for="InstructorId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Save" class="btn btn-default" />
+                            <a asp-action="Index" class="btn btn-primary">Back to List</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

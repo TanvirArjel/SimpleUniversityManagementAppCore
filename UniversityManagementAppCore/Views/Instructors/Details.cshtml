@@ -1,0 +1,61 @@
+@model UniversityManagementAppCore.Models.Instructor
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<br />
+<div class="panel-group">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><span style="font-size: 25px">Instructor Details</span></div>
+        <div class="panel-body">
+            <div>
+               
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.FirstName)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.FirstName)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.LastName)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.LastName)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.HireDate)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.HireDate)
+                    </dd>
+                    
+                    <dt>
+                        Office
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.OfficeAssignment.Location)
+                    </dd>
+                    
+                    <dt>
+                        Courses
+                    </dt>
+                    <dd>
+                        @foreach (var course in Model.CourseAssignments)
+                        {
+                            <text>@course.CourseId @course.Course.Title <br/> </text>
+                        }
+                    </dd>
+
+                </dl>
+            </div>
+        </div>
+        
+        <div class="panel-footer">
+            <a asp-action="Edit" asp-route-id="@Model.InstructorId" class="btn btn-default">Edit</a> |
+            <a asp-action="Index" class="btn btn-primary">Back to List</a>
+        </div>
+    </div>
+
+</div>

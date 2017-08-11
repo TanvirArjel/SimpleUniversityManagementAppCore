@@ -1,0 +1,62 @@
+@model IEnumerable<UniversityManagementAppCore.Models.Department>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<br/>
+
+<div class="panel-group">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span style="font-size: 25px">Department List</span>
+            <a class="btn btn-success pull-right" asp-action="Create">Create New</a>
+        </div>
+        <div class="panel-body">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Budget)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.StartDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Administrator)
+                    </th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model) {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Budget)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StartDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Administrator.FirstName)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.DepartmentId">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.DepartmentId">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.DepartmentId">Delete</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+</div>
+

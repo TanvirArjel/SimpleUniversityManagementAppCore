@@ -1,0 +1,66 @@
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model UniversityManagementAppCore.Models.Instructor
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<br />
+<div class="panel-group">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><span style="font-size: 25px">Delete Instructor</span></div>
+        <div class="panel-body">
+            <div>
+                <div class="alert alert-danger">Are you sure you want to delete this?</div>
+                <dl class="dl-horizontal">
+                    <input type="hidden" asp-for="InstructorId" />
+                    <dt>
+                        @Html.DisplayNameFor(model => model.FirstName)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.FirstName)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.LastName)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.LastName)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.HireDate)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.HireDate)
+                    </dd>
+                    <dt>
+                       Office Location
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.OfficeAssignment.Location)
+                    </dd>
+                    <dt>
+                        Courses
+                    </dt>
+                    <dd>
+                        @foreach (var course in Model.CourseAssignments)
+                        {
+                            <text>@course.CourseId @course.Course.Title <br/> </text>
+                        }
+                    </dd>
+                </dl>
+    
+                
+            </div>
+        </div>
+        <div class="panel-footer">
+            <form asp-action="Delete">
+                <div class="form-actions no-color">
+                    <input type="submit" value="Delete" class="btn btn-default" /> |
+                    <a asp-action="Index" class="btn btn-primary">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+

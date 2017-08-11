@@ -1,0 +1,53 @@
+@model UniversityManagementAppCore.Models.Department
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<br />
+<div class="panel-group">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span style="font-size: 25px">Delete Department</span>
+        </div>
+        <div class="panel-body">
+            <div class="alert alert-danger">Are you sure you want to delete this?</div>
+            <dl class="dl-horizontal">
+                <input type="hidden" asp-for="DepartmentId"/>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Budget)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Budget)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.StartDate)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.StartDate)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Administrator)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Administrator.FirstName)
+                </dd>
+            </dl>
+        </div>
+        <div class="panel-footer">
+            <form asp-action="Delete">
+                <div class="form-actions no-color">
+                    <input type="submit" value="Delete" class="btn btn-default" /> |
+                    <a asp-action="Index" class="btn btn-primary">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
