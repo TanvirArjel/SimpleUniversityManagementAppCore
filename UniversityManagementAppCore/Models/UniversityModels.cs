@@ -30,6 +30,8 @@ namespace UniversityManagementAppCore.Models
     }
     public class Student : Person
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int StudentId { get; set; }
 
         [Required]
@@ -48,11 +50,13 @@ namespace UniversityManagementAppCore.Models
 
     public class Enrollment
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int EnrollmentId { get; set; }
         public int CourseId { get; set; }
         public int StudentId { get; set; }
 
-        [DisplayFormat(NullDisplayText = "No Grade")]
+        [DisplayFormat(ConvertEmptyStringToNull = true,NullDisplayText = "No Grade")]
         public Grade? Grade { get; set; }
 
         public Course Course { get; set; }
@@ -61,9 +65,10 @@ namespace UniversityManagementAppCore.Models
 
     public class Course
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        
 
         [Display(Name = "Course No.")]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int CourseId { get; set; }
 
         [StringLength(50, MinimumLength = 3)]
@@ -102,6 +107,8 @@ namespace UniversityManagementAppCore.Models
 
     public class Instructor : Person
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int InstructorId { get; set; }
 
         [DataType(DataType.Date)]
@@ -115,6 +122,8 @@ namespace UniversityManagementAppCore.Models
 
     public class Department
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int DepartmentId { get; set; }
 
         [StringLength(50, MinimumLength = 3)]

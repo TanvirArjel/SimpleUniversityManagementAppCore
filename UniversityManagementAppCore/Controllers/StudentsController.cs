@@ -10,6 +10,8 @@ using UniversityManagementAppCore.CommonCode;
 using UniversityManagementAppCore.Data;
 using UniversityManagementAppCore.Models;
 using System.Linq.Dynamic.Core;
+using System.Net.Mime;
+using System.Runtime.CompilerServices;
 
 namespace UniversityManagementAppCore.Controllers
 {
@@ -19,7 +21,7 @@ namespace UniversityManagementAppCore.Controllers
 
         public StudentsController(UniversityContext context)
         {
-            _context = context;    
+            _context = context;
         }
 
         // GET: Students
@@ -35,7 +37,7 @@ namespace UniversityManagementAppCore.Controllers
 
             var sortOrderName = sortOrder.Substring(sortOrder.IndexOf("_") + 1);
             students = students.OrderBy(sortColumnName + " " + sortOrderName);
-           
+
 
 
             //bool ascending = sortOrder.EndsWith("_asc");
@@ -74,7 +76,7 @@ namespace UniversityManagementAppCore.Controllers
             ViewData["DateSortParam"] = sortOrder == "EnrollmentDate_desc" ? "EnrollmentDate_asc" : "EnrollmentDate_desc";
 
 
-            int pageSize = 2;
+            const int pageSize = 2;
 
             var totalItems = students.Count();
             ViewBag.TotalItem = totalItems;
@@ -136,7 +138,7 @@ namespace UniversityManagementAppCore.Controllers
         }
 
         // POST: Students/Create
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FirstName,LastName,EnrollmentDate")] Student student, int[] selectedCourses)
@@ -150,7 +152,7 @@ namespace UniversityManagementAppCore.Controllers
                         student.Enrollments = new List<Enrollment>();
                         foreach (var selectedCourse in selectedCourses)
                         {
-                            Enrollment enrollment = new Enrollment() {CourseId = selectedCourse, StudentId = student.StudentId, Grade = null};
+                            Enrollment enrollment = new Enrollment() { CourseId = selectedCourse, StudentId = student.StudentId, Grade = null };
                             student.Enrollments.Add(enrollment);
                         }
                     }
@@ -162,11 +164,13 @@ namespace UniversityManagementAppCore.Controllers
             catch (DbUpdateException ex)
             {
                 Console.WriteLine(ex);
-                ModelState.AddModelError("","Uable to save changes.Try again, and if the problem persists, see your system administrator.");
+                ModelState.AddModelError("", "Uable to save changes.Try again, and if the problem persists, see your system administrator.");
             }
             ViewBag.AllCourses = await _context.Courses.ToListAsync();
             return View(student);
         }
+
+
 
         // GET: Students/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -176,48 +180,115 @@ namespace UniversityManagementAppCore.Controllers
                 return NotFound();
             }
 
-            var student = await _context.Students.Include(s => s.Enrollments).SingleOrDefaultAsync(m => m.StudentId == id);
+            var student = await _context.Students.Include(s => s.Enrollments).ThenInclude(e => e.Course).SingleOrDefaultAsync(m => m.StudentId == id);
             if (student == null)
             {
                 return NotFound();
             }
 
             ViewBag.AllCourses = await _context.Courses.ToListAsync();
+            var greadeList = Enum.GetValues(typeof(Grade)).Cast<Grade>().Select(v => new SelectListItem
+            {
+                Text = v.ToString(),
+                Value = v.ToString()
+                //Value = ((int)v).ToString()
+            }).ToList();
+            ViewBag.GradeList = greadeList;
             return View(student);
         }
 
+        private void UpdateStudentEnrollments(Student studentToBeUpdated, int[] selectedCourses, string [] grades)
+        {
+            if (selectedCourses == null)
+            {
+                studentToBeUpdated.Enrollments = new List<Enrollment>();
+                return;
+            }
+
+            var selectedCourseHs = new HashSet<int>(selectedCourses);
+            var gradesHs = new HashSet<string>(grades);
+
+            studentToBeUpdated.Enrollments.Clear();
+
+            studentToBeUpdated.Enrollments = new List<Enrollment>();
+
+            using (var e1 = selectedCourseHs.GetEnumerator())
+            using (var e2 = gradesHs.GetEnumerator())
+            {
+                while (e1.MoveNext() && e2.MoveNext())
+                {
+                    var selectedCourseId = e1.Current;
+                    var currentGrade = e2.Current;
+                 
+                    Grade grade;
+                    Enrollment enrollment;
+                    bool tryParse = Enum.TryParse(currentGrade,true, out grade);
+                    if (tryParse)
+                    {
+                        enrollment = new Enrollment()
+                        {
+                            CourseId = selectedCourseId,
+                            Grade = grade,
+                            StudentId = studentToBeUpdated.StudentId
+                        };
+                    }
+                    else
+                    {
+                        enrollment = new Enrollment()
+                        {
+                            CourseId = selectedCourseId,
+                            StudentId = studentToBeUpdated.StudentId
+                        };
+                    }
+
+                    
+
+                    studentToBeUpdated.Enrollments.Add(enrollment);
+                }
+            }
+
+        }
+
         // POST: Students/Edit/5
-        
+
         [HttpPost]
         [ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPost(int? id)
+        public async Task<IActionResult> EditPost(int? id, int[] selectedCourses, string[] grades)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var studentToBeUpdated = await _context.Students.SingleOrDefaultAsync(s => s.StudentId == id);
-            if (await TryUpdateModelAsync(studentToBeUpdated,"",s => s.FirstName, s => s.LastName, s => s.EnrollmentDate))
+            Student studentToBeUpdated = await _context.Students.Include(s => s.Enrollments).ThenInclude(e => e.Course).SingleOrDefaultAsync(s => s.StudentId == id);
+            if (studentToBeUpdated == null)
+            {
+                return NotFound();
+            }
+            if (await TryUpdateModelAsync<Student>(studentToBeUpdated, "", s => s.FirstName, s => s.LastName, s => s.EnrollmentDate))
             {
                 try
                 {
-                   await _context.SaveChangesAsync();
+                    UpdateStudentEnrollments(studentToBeUpdated, selectedCourses, grades);
+                    await _context.SaveChangesAsync();
                     return RedirectToAction("Index");
                 }
                 catch (DbUpdateException ex)
                 {
                     Console.WriteLine(ex);
-                    ModelState.AddModelError("","Uable to save chages! Plese Try again. If the problem persits, see your system administrator");
+                    ModelState.AddModelError("", "Uable to save chages! Plese Try again. If the problem persits, see your system administrator");
                 }
             }
+
+
+
             ViewBag.AllCourses = await _context.Courses.ToListAsync();
             return View(studentToBeUpdated);
         }
 
         // GET: Students/Delete/5
-        public async Task<IActionResult> Delete(int? id, bool ? saveChangesError = false)
+        public async Task<IActionResult> Delete(int? id, bool? saveChangesError = false)
         {
             if (id == null)
             {
@@ -258,8 +329,8 @@ namespace UniversityManagementAppCore.Controllers
             catch (DbUpdateException ex)
             {
                 Console.WriteLine(ex);
-                return RedirectToAction("Delete", new {id = id, saveChangesError = true});
-            }  
+                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+            }
         }
 
         private bool StudentExists(int id)

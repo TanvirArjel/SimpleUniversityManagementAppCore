@@ -137,21 +137,20 @@ namespace UniversityManagementAppCore.Controllers
                 return;
             }
 
-            var selectedCoursesHS = new HashSet<int>(selectedCourses);
-            var instructorCourses = new HashSet<int>
-                (instructorToBeUpdated.CourseAssignments.Select(c => c.Course.CourseId));
+            var selectedCoursesHs = new HashSet<int>(selectedCourses);
+            var instructorCoursesHs = new HashSet<int>(instructorToBeUpdated.CourseAssignments.Select(c => c.Course.CourseId));
 
-            foreach (var selectedCourse in selectedCoursesHS)
+            foreach (var selectedCourse in selectedCoursesHs)
             {
-                if (!instructorCourses.Contains(selectedCourse))
+                if (!instructorCoursesHs.Contains(selectedCourse))
                 {
                     instructorToBeUpdated.CourseAssignments.Add(new CourseAssignment { InstructorId = instructorToBeUpdated.InstructorId, CourseId = selectedCourse });
                 }
             }
 
-            foreach (var instructorCourse in instructorCourses)
+            foreach (var instructorCourse in instructorCoursesHs)
             {
-                if (!selectedCoursesHS.Contains(instructorCourse))
+                if (!selectedCoursesHs.Contains(instructorCourse))
                 {
                     CourseAssignment courseToRemove = instructorToBeUpdated.CourseAssignments.SingleOrDefault(i => i.CourseId == instructorCourse);
                     _context.Remove(courseToRemove);

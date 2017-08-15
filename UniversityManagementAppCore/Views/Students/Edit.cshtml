@@ -1,10 +1,11 @@
+@using System.Linq
 @model UniversityManagementAppCore.Models.Student
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<br/>
+<br />
 <div class="panel-group">
     <div class="panel panel-primary">
         <div class="panel-heading">
@@ -13,7 +14,7 @@
         <div class="panel-body">
             <form asp-action="Edit">
                 <div class="form-horizontal">
-                    
+
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input type="hidden" asp-for="StudentId" />
                     <div class="form-group">
@@ -33,7 +34,7 @@
                     <div class="form-group">
                         <label asp-for="EnrollmentDate" class="col-md-2 control-label"></label>
                         <div class="col-md-10">
-                            <input asp-for="EnrollmentDate" class="form-control"/>
+                            <input asp-for="EnrollmentDate" class="form-control" />
                             <span asp-validation-for="EnrollmentDate" class="text-danger"></span>
                         </div>
                     </div>
@@ -53,13 +54,21 @@
                                 <tbody>
                                     @foreach (var course in ViewBag.AllCourses)
                                     {
+                                        string isChecked = "";
+                                        string isDisabled = "disabled";
+                                        if (Model.Enrollments.Any(x => x.CourseId == course.CourseId))
+                                        {
+                                            isChecked = "checked";
+                                            isDisabled = "";
+                                        }
                                         <tr>
-                                            <td><input type="checkbox" name="selectedCourses" value="@course.CourseId" @{if (Model.Enrollments.Any(x => x.CourseId == course.CourseId))
-                                                                                                                           {
-                                                                                                                             @:checked="checked"
-                                                                                                                           }}> @course.CourseId</td>
+                                            <td><input class="course" type="checkbox" name="selectedCourses" value="@course.CourseId" @isChecked /> @course.CourseId</td>
                                             <td>@course.Title</td>
-                                            <td><input name="grades" value="@Model.Enrollments.Where(e => e.CourseId == course.CourseId).Select(e => e.Grade).FirstOrDefault()" /></td>
+
+                                            @*<td><select asp-items="@ViewBag.GradeList">
+                                                    <option value="">Select Grade</option>
+                                                </select></td>*@
+                                            <td><input name="grades" value="@Model.Enrollments.Where(e => e.CourseId == course.CourseId).Select(e => e.Grade).FirstOrDefault()" @isDisabled /></td>
                                         </tr>
                                     }
                                 </tbody>
@@ -79,10 +88,21 @@
             </form>
         </div>
     </div>
-    
+
 </div>
 
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            $(".course").on("change", function () {
+                if ($(this).prop('checked')) {
+                    $(this).parent().siblings().children("input[name ='grades']").prop('disabled', false);
+                } else {
+                    $(this).parent().siblings().children("input[name ='grades']").val('').prop('disabled', true);
+                }
+            });
+        })
+    </script>
 }
