@@ -187,13 +187,6 @@ namespace UniversityManagementAppCore.Controllers
             }
 
             ViewBag.AllCourses = await _context.Courses.ToListAsync();
-            var greadeList = Enum.GetValues(typeof(Grade)).Cast<Grade>().Select(v => new SelectListItem
-            {
-                Text = v.ToString(),
-                Value = v.ToString()
-                //Value = ((int)v).ToString()
-            }).ToList();
-            ViewBag.GradeList = greadeList;
             return View(student);
         }
 

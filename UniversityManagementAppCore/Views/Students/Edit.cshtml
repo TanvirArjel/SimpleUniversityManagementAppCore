@@ -1,4 +1,7 @@
+@using System
 @using System.Linq
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using UniversityManagementAppCore.Models
 @model UniversityManagementAppCore.Models.Student
 
 @{
@@ -61,14 +64,22 @@
                                             isChecked = "checked";
                                             isDisabled = "";
                                         }
+
+                                        var greadeList = Enum.GetValues(typeof(Grade)).Cast<Grade>().Select(v => new SelectListItem
+                                        {
+                                            Text = v.ToString(),
+                                            Value = v.ToString(),
+                                            Selected = Model.Enrollments.FirstOrDefault(e => e.CourseId == course.CourseId && e.Grade == v) != null
+                                        }).ToList();
+
                                         <tr>
                                             <td><input class="course" type="checkbox" name="selectedCourses" value="@course.CourseId" @isChecked /> @course.CourseId</td>
                                             <td>@course.Title</td>
-
-                                            @*<td><select asp-items="@ViewBag.GradeList">
+                                            <td>
+                                                <select name ="grades" asp-items="@greadeList">
                                                     <option value="">Select Grade</option>
-                                                </select></td>*@
-                                            <td><input name="grades" value="@Model.Enrollments.Where(e => e.CourseId == course.CourseId).Select(e => e.Grade).FirstOrDefault()" @isDisabled /></td>
+                                                </select>
+                                            </td>
                                         </tr>
                                     }
                                 </tbody>
@@ -98,9 +109,18 @@
         $(document).ready(function () {
             $(".course").on("change", function () {
                 if ($(this).prop('checked')) {
-                    $(this).parent().siblings().children("input[name ='grades']").prop('disabled', false);
+                    $(this).parent().siblings().children("select[name ='grades']").prop('disabled', false);
                 } else {
-                    $(this).parent().siblings().children("input[name ='grades']").val('').prop('disabled', true);
+                    $(this).parent().siblings().children("select[name ='grades']").val('').prop('disabled', true);
+                }
+            });
+
+
+            $("select[name ='grades']").on("change", function () {
+                if ($(this).val()) {
+                    $(this).parent().siblings().children(".course").prop('checked', true);
+                } else {
+                    $(this).parent().siblings().children(".course").prop('checked', false);
                 }
             });
         })
