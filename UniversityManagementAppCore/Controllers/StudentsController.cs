@@ -39,7 +39,7 @@ namespace UniversityManagementAppCore.Controllers
             students = students.OrderBy(sortColumnName + " " + sortOrderName);
 
 
-
+            #region BeginnerProcess
             //bool ascending = sortOrder.EndsWith("_asc");
             //if (ascending)
             //{
@@ -66,6 +66,9 @@ namespace UniversityManagementAppCore.Controllers
             //        students = students.OrderBy(s => s.FirstName);
             //        break;
             //}
+            #endregion
+
+
 
             ViewData["currentFirstNameFilter"] = firstName;
             ViewData["currentLastNameFilter"] = lastName;
@@ -233,9 +236,6 @@ namespace UniversityManagementAppCore.Controllers
                             StudentId = studentToBeUpdated.StudentId
                         };
                     }
-
-                    
-
                     studentToBeUpdated.Enrollments.Add(enrollment);
                 }
             }

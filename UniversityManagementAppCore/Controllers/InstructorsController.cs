@@ -140,33 +140,52 @@ namespace UniversityManagementAppCore.Controllers
             var selectedCoursesHs = new HashSet<int>(selectedCourses);
             var instructorCoursesHs = new HashSet<int>(instructorToBeUpdated.CourseAssignments.Select(c => c.Course.CourseId));
 
-            foreach (var selectedCourse in selectedCoursesHs)
+            #region Solution-1
+
+            var courseAssingmentToBeAdded = selectedCoursesHs.Except(instructorCoursesHs).ToList();
+            foreach (var selectedCourse in courseAssingmentToBeAdded)
             {
-                if (!instructorCoursesHs.Contains(selectedCourse))
-                {
-                    instructorToBeUpdated.CourseAssignments.Add(new CourseAssignment { InstructorId = instructorToBeUpdated.InstructorId, CourseId = selectedCourse });
-                }
+                instructorToBeUpdated.CourseAssignments.Add(new CourseAssignment { InstructorId = instructorToBeUpdated.InstructorId, CourseId = selectedCourse });
             }
 
-            foreach (var instructorCourse in instructorCoursesHs)
+            var courseAssignmentToBeDeleted = instructorCoursesHs.Except(selectedCoursesHs).ToList();
+            foreach (var instructorCourse in courseAssignmentToBeDeleted)
             {
-                if (!selectedCoursesHs.Contains(instructorCourse))
-                {
-                    CourseAssignment courseToRemove = instructorToBeUpdated.CourseAssignments.SingleOrDefault(i => i.CourseId == instructorCourse);
-                    _context.Remove(courseToRemove);
-                }
+                CourseAssignment courseToRemove = instructorToBeUpdated.CourseAssignments.SingleOrDefault(i => i.CourseId == instructorCourse);
+                _context.Remove(courseToRemove);
             }
 
 
+            #endregion
 
-            //This is my another implementation
+            #region Solution-2
+
+            //foreach (var selectedCourse in selectedCoursesHs)
+            //{
+            //    if (!instructorCoursesHs.Contains(selectedCourse))
+            //    {
+            //        instructorToBeUpdated.CourseAssignments.Add(new CourseAssignment { InstructorId = instructorToBeUpdated.InstructorId, CourseId = selectedCourse });
+            //    }
+            //}
+
+            //foreach (var instructorCourse in instructorCoursesHs)
+            //{
+            //    if (!selectedCoursesHs.Contains(instructorCourse))
+            //    {
+            //        CourseAssignment courseToRemove = instructorToBeUpdated.CourseAssignments.SingleOrDefault(i => i.CourseId == instructorCourse);
+            //        _context.Remove(courseToRemove);
+            //    }
+            //}
+            #endregion
+
+            #region Solution-3
 
             //instructorToBeUpdated.CourseAssignments.Clear();
             //instructorToBeUpdated.CourseAssignments = new List<CourseAssignment>();
 
             //if (selectedCourses != null)
             //{
-                
+
             //    foreach (var selectedCourse in selectedCourses)
             //    {
             //        CourseAssignment courseAssignment = new CourseAssignment()
@@ -179,6 +198,7 @@ namespace UniversityManagementAppCore.Controllers
             //    }
             //}
 
+            #endregion
 
         }
 
