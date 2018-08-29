@@ -1,17 +1,13 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using UniversityManagementAppCore.CommonCode;
 using UniversityManagementAppCore.Data;
 using UniversityManagementAppCore.Models;
-using System.Linq.Dynamic.Core;
-using System.Net.Mime;
-using System.Runtime.CompilerServices;
 
 namespace UniversityManagementAppCore.Controllers
 {
@@ -80,36 +76,6 @@ namespace UniversityManagementAppCore.Controllers
 
 
             const int pageSize = 2;
-
-            var totalItems = students.Count();
-            ViewBag.TotalItem = totalItems;
-            ViewBag.CurrentPage = page;
-            ViewBag.PageSize = pageSize;
-            ViewBag.PageButtonToShow = 5;
-            ViewBag.TotalPage = Convert.ToInt32(Math.Ceiling((double)totalItems / pageSize));
-
-            int pageItemStarts = 0;
-            if (totalItems > 0)
-            {
-                pageItemStarts = ((page - 1) * pageSize) + 1;
-            }
-            ViewBag.PageItemStarts = pageItemStarts;
-
-            int pageItemTo = 0;
-            if (totalItems > 0)
-            {
-                if (page * pageSize > totalItems)
-                {
-                    pageItemTo = totalItems;
-                }
-                else
-                {
-                    pageItemTo = page * pageSize;
-                }
-            }
-
-            ViewBag.PageItemTo = pageItemTo;
-
 
             return View(await PaginatedList<Student>.CreateAsync(students.AsNoTracking(), page, pageSize));
         }

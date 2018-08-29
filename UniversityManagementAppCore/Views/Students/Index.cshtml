@@ -78,7 +78,7 @@
             
             
             <button class="btn btn-default MakeDisabled pull-left">
-                Showing item @ViewBag.PageItemStarts to @ViewBag.PageItemTo of @ViewBag.TotalItems items
+                Showing item @Model.PageItemsStartsAt to @Model.PageItemsEndsAt of @Model.TotalItems items
             </button>
 
 
@@ -97,21 +97,21 @@
                 
                 @{
                     
-                    if (ViewBag.TotalPage > ViewBag.PageButtonToShow)
+                    if (Model.TotalPages > Model.PaginationButtonNumber)
                     {
-                        if (ViewBag.CurrentPage > (ViewBag.PageButtonToShow - 2))
+                        if (Model.PageIndex > (Model.PaginationButtonNumber - 2))
                         {
                             <li><a asp-action="Index" asp-route-page="1">1</a></li>
                             <li><a>....</a></li>
 
-                            if (ViewBag.CurrentPage + 2 >= ViewBag.TotalPage)
+                            if (Model.PageIndex + 2 >= Model.TotalPages)
                             {
 
-                                for (int i = ViewBag.TotalPage - 3; i < ViewBag.TotalPage; i++)
+                                for (int i = Model.TotalPages - 3; i < Model.TotalPages; i++)
                                 {
                                     string currentPageCss = "";
 
-                                    if (i == ViewBag.CurrentPage)
+                                    if (i == Model.PageIndex)
                                     {
                                         currentPageCss = "active MakeDisabled";
                                     }
@@ -122,12 +122,12 @@
                             }
                             else
                             {
-                                for (int i = ViewBag.CurrentPage - 1; i <= ViewBag.CurrentPage + 1; i++)
+                                for (int i = Model.PageIndex - 1; i <= Model.PageIndex + 1; i++)
                                 {
 
                                     string currentPageCss = "";
 
-                                    if (i == ViewBag.CurrentPage)
+                                    if (i == Model.PageIndex)
                                     {
                                         currentPageCss = "active MakeDisabled";
                                     }
@@ -140,12 +140,12 @@
 
                         else
                         {
-                            for (int i = 1; i <= ViewBag.PageButtonToShow - 1; i++)
+                            for (int i = 1; i <= Model.PaginationButtonNumber - 1; i++)
                             {
 
                                 string currentPageCss = "";
 
-                                if (i == ViewBag.CurrentPage)
+                                if (i == Model.PageIndex)
                                 {
                                     currentPageCss = "active MakeDisabled";
                                 }
@@ -157,11 +157,11 @@
                     }
                     else
                     {
-                        for (int i = 1; i <= ViewBag.TotalPage; i++)
+                        for (int i = 1; i <= Model.TotalPages; i++)
                         {
                             string currentPageCss = "";
 
-                            if (i == ViewBag.CurrentPage)
+                            if (i == Model.PageIndex)
                             {
                                 currentPageCss = "active";
                             }
@@ -183,13 +183,13 @@
                 
                 @{
                     string hideDotCss = "";
-                    if (ViewBag.TotalPage <= ViewBag.PageButtonToShow)
+                    if (Model.TotalPages <= Model.PaginationButtonNumber)
                     {
                         hideDotCss = "hidden";
                     }
                     else 
                     {
-                        if (ViewBag.CurrentPage + 2 >= ViewBag.TotalPage)
+                        if (Model.PageIndex + 2 >= Model.TotalPages)
                         {
                             hideDotCss = "hidden";
                         }
@@ -199,17 +199,17 @@
 
                     <li class="@hideDotCss"><a>....</a></li>
 
-                    if (ViewBag.TotalPage > ViewBag.PageButtonToShow)
+                    if (Model.TotalPages > Model.PaginationButtonNumber)
                     {
 
                         string currentPageCss = "";
 
-                        if (ViewBag.CurrentPage == ViewBag.TotalPages)
+                        if (Model.PageIndex == Model.TotalPages)
                         {
                             currentPageCss = "active MakeDisabled";
                         }
                         <li class="@currentPageCss">
-                            <a asp-action="Index" asp-route-page ="@ViewBag.TotalPage">@ViewBag.TotalPage</a>
+                            <a asp-action="Index" asp-route-page ="@Model.TotalPages">@Model.TotalPages</a>
                         </li>
                     }
                 }
